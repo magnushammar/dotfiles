@@ -36,7 +36,7 @@ in
       git
     ];
     # initial password saved in /mnt/etc/nixos/initial-password.txt
-    initialHashedPassword = builtins.readFile "/mnt/etc/nixos/initial-password.txt";
+    initialHashedPassword = "${systemParams.hashed_password}";
   };
 
   system.stateVersion = "23.11";

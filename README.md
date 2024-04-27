@@ -4,15 +4,15 @@ Embryo of a NixOS config/setup. Let's see where it leads. Take no advice from th
 ## Structure.
 I like my long descriptive file names as I easily get confused when I on occation edit several configuration.nix at the same time. Separate folders might be a future thing but I am an opponent of premature folderization! 
 
-common/configuration.nix
-oak/oak-bootstrap.sh
-oak/oak-bootstrap.nix
-oak/oak-base-configuration.nix
-oak/oak-base-flake.nix
-oak/oak-base-home.nix
-oak/oak-live-configuration.nix
-oak/oak-live-flake.nix
-oak/oak-live-home.nix
+common/configuration.nix  
+oak/oak-bootstrap.sh  
+oak/oak-bootstrap.nix  
+oak/oak-base-configuration.nix  
+oak/oak-base-flake.nix  
+oak/oak-base-home.nix  
+oak/oak-live-configuration.nix  
+oak/oak-live-flake.nix  
+oak/oak-live-home.nix  
 
 ## Installation.
 

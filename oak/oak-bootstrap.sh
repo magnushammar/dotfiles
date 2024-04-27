@@ -80,35 +80,24 @@ mount -o umask=077 ${ESP_PARTITION}p1 /mnt/boot
 ####### Generate and Get bootstrap configuration ##########
 # NixOS, User, ZFS, Git, Region.
 nixos-generate-config --root /mnt
-curl -o /mnt/etc/nixos/configuration.nix https://hammar.org/bootstrap-oak.nix
+cp /home/nixos/dotfiles/oak/oak-bootstrap.nix /mnt/etc/nixos/configuration.nix
 
 ########## Get or Create Hashed Password ##########
 
-# Check if the password file exists
-password_file="/mnt/etc/nixos/initial-password.txt"
-if [ ! -f "$password_file" ]; then
-  # Prompt for the password
-  read -s -p "Enter the initial password: " password
-  echo
-  read -s -p "Confirm the password: " password_confirm
-  echo
+# Prompt for the password
+read -s -p "Enter the initial password: " password
+echo
+read -s -p "Confirm the password: " password_confirm
+echo
 
-  # Check if the passwords match
-  if [ "$password" != "$password_confirm" ]; then
-    echo "Passwords do not match. Please try again."
-    exit 1
-  fi
-
-  # Generate the hashed password
-  hashed_password=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
-
-  # Save the hashed password to the file
-  echo "$hashed_password" > "$password_file"
-  chmod 600 "$password_file"  # Set appropriate permissions
-  echo "Hashed password saved to $password_file"
-else
-  echo "Password file already exists at $password_file"
+# Check if the passwords match
+if [ "$password" != "$password_confirm" ]; then
+  echo "Passwords do not match. Please try again."
+  exit 1
 fi
+
+# Generate the hashed password
+hashed_password=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
 
 ######### Get parameters for configuration.nix #########
 # Identify the boot partition and set networking host id for ZFS
@@ -118,6 +107,7 @@ NETWORKING_HOST_ID=$(head -c 4 /dev/urandom | od -A none -t x8 | awk '{print sub
 ########## Save the system parameters to a file ##########
 cat <<EOF > /mnt/etc/nixos/systemParams.json
 {
+    "hashedPassword": "$hashed_password",
     "networkingHostId": "$NETWORKING_HOST_ID",
     "espUUID": "$ESP_UUID"
 }
