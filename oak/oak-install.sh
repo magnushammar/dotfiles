@@ -1,3 +1,8 @@
+# If NixOS is already installed abort script
+if [ -d "/etc/nixos" ]; then
+  echo "NixOS is already installed. Aborting."
+  exit 1
+
 ##################################################
 ## DANGER ZONE THIS SECTION WILL NUKE ALL DISKS ##
 ##################################################
@@ -77,10 +82,12 @@ mkfs.fat -F 32 -n BOOT ${ESP_PARTITION}p1
 mkdir -p /mnt/boot
 mount -o umask=077 ${ESP_PARTITION}p1 /mnt/boot
 
-####### Generate and Get bootstrap configuration ##########
+####### Configure for installation ##########
 # NixOS, User, ZFS, Git, Region.
 nixos-generate-config --root /mnt
-cp /home/nixos/dotfiles/oak/oak-bootstrap.nix /mnt/etc/nixos/configuration.nix
+cp dotfiles/oak/oak-install.nix /mnt/etc/nixos/configuration.nix
+cp dotfiles/oak/oak-filesystems.nix /mnt/etc/nixos/
+
 
 ########## Get or Create Hashed Password ##########
 
@@ -97,7 +104,7 @@ if [ "$password" != "$password_confirm" ]; then
 fi
 
 # Generate the hashed password
-hashed_password=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
+hashedPassword=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
 
 ######### Get parameters for configuration.nix #########
 # Identify the boot partition and set networking host id for ZFS
@@ -107,7 +114,7 @@ NETWORKING_HOST_ID=$(head -c 4 /dev/urandom | od -A none -t x8 | awk '{print sub
 ########## Save the system parameters to a file ##########
 cat <<EOF > /mnt/etc/nixos/systemParams.json
 {
-    "hashedPassword": "$hashed_password",
+    "hashedPassword": "$hashedPassword",
     "networkingHostId": "$NETWORKING_HOST_ID",
     "espUUID": "$ESP_UUID"
 }

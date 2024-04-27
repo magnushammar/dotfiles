@@ -1,11 +1,6 @@
-{ config, pkgs, ... }:
-let
-  # Read the JSON file and decode it
-  jsonContent = builtins.readFile "/mnt/etc/nixos/systemParams.json";
-  systemParams = builtins.fromJSON jsonContent;
-in
-{
-  # Boot loader config for configuration.nix:
+# Oak file systems
+{systemParams, ...}:
+  
   boot.loader.grub = {
     enable = true;
     zfsSupport = true;
@@ -28,16 +23,3 @@ in
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
    
   swapDevices = [ ];
-
-  users.users.hammar = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      git
-    ];
-    # initial password saved in /mnt/etc/nixos/initial-password.txt
-    initialHashedPassword = "${systemParams.hashed_password}";
-  };
-
-  system.stateVersion = "23.11";
-}
