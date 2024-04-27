@@ -1,6 +1,6 @@
 # Oak file systems
-{systemParams, ...}:
-  
+{systemParams, lib, config, pkgs ...}:
+{  
   boot.loader.grub = {
     enable = true;
     zfsSupport = true;
@@ -23,3 +23,4 @@
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
    
   swapDevices = [ ];
+}
