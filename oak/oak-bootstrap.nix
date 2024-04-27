@@ -35,6 +35,8 @@ in
     packages = with pkgs; [
       git
     ];
+    # initial password saved in /mnt/etc/nixos/initial-password.txt
+    initialHashedPassword = builtins.readFile "/mnt/etc/nixos/initial-password.txt";
   };
 
   system.stateVersion = "23.11";

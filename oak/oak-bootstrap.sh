@@ -1,4 +1,6 @@
-# DANGER ZONE THIS SECTION WILL NUKE ALL DISKS
+##################################################
+## DANGER ZONE THIS SECTION WILL NUKE ALL DISKS ##
+##################################################
 # wipefs -a /dev/nvme0n1
 # wipefs -a /dev/nvme1n1
 # wipefs -a /dev/nvme2n1
@@ -9,6 +11,8 @@
 # zpool labelclear -f /dev/nvme2n1
 # zpool labelclear -f /dev/nvme3n1
 # zpool labelclear -f /dev/nvme4n1
+
+########## Create the file system ##########
 
 # Serial numbers of the disks
 serial_numbers=(
@@ -73,17 +77,45 @@ mkfs.fat -F 32 -n BOOT ${ESP_PARTITION}p1
 mkdir -p /mnt/boot
 mount -o umask=077 ${ESP_PARTITION}p1 /mnt/boot
 
-
-# Bootstrap configuration. NixOS, ZFS, Git, Region.
+####### Generate and Get bootstrap configuration ##########
+# NixOS, User, ZFS, Git, Region.
 nixos-generate-config --root /mnt
 curl -o /mnt/etc/nixos/configuration.nix https://hammar.org/bootstrap-oak.nix
 
-# Configuration.nix need to identify the boot partition
-ESP_UUID=$(blkid -s UUID -o value ${ESP_PARTITION}p1) 
-# Configuration.nix need to give ZFS a unique Networking Host ID
-NETWORKING_HOST_ID=$(head -c 4 /dev/urandom | od -A none -t x8 | awk '{print substr($1,length($1)-7,8)}')
+########## Get or Create Hashed Password ##########
 
-# Save the system parameters to a file
+# Check if the password file exists
+password_file="/mnt/etc/nixos/initial-password.txt"
+if [ ! -f "$password_file" ]; then
+  # Prompt for the password
+  read -s -p "Enter the initial password: " password
+  echo
+  read -s -p "Confirm the password: " password_confirm
+  echo
+
+  # Check if the passwords match
+  if [ "$password" != "$password_confirm" ]; then
+    echo "Passwords do not match. Please try again."
+    exit 1
+  fi
+
+  # Generate the hashed password
+  hashed_password=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
+
+  # Save the hashed password to the file
+  echo "$hashed_password" > "$password_file"
+  chmod 600 "$password_file"  # Set appropriate permissions
+  echo "Hashed password saved to $password_file"
+else
+  echo "Password file already exists at $password_file"
+fi
+
+######### Get parameters for configuration.nix #########
+# Identify the boot partition and set networking host id for ZFS
+ESP_UUID=$(blkid -s UUID -o value ${ESP_PARTITION}p1) 
+NETWORKING_HOST_ID=$(head -c 4 /dev/urandom | od -A none -t x8 | awk '{print substr($1,length($1)-7,8)}') # Configuration.nix need to give ZFS a unique Networking Host ID
+
+########## Save the system parameters to a file ##########
 cat <<EOF > /mnt/etc/nixos/systemParams.json
 {
     "networkingHostId": "$NETWORKING_HOST_ID",
@@ -91,5 +123,7 @@ cat <<EOF > /mnt/etc/nixos/systemParams.json
 }
 EOF
 
+########## Install NixOS. Woohoo! ##########
 # nixos-install
 # reboot
+
