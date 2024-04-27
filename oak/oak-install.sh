@@ -1,7 +1,9 @@
 # If NixOS is already installed abort script
-if [ -d "/etc/nixos" ]; then
+# Check if NixOS is installed by verifying the absence of a typical live environment directory
+if [ ! -d "/mnt/etc/nixos" ] && [ -d "/etc/nixos" ]; then
   echo "NixOS is already installed. Aborting."
   exit 1
+fi
 
 ##################################################
 ## DANGER ZONE THIS SECTION WILL NUKE ALL DISKS ##
@@ -11,7 +13,7 @@ if [ -d "/etc/nixos" ]; then
 # wipefs -a /dev/nvme2n1
 # wipefs -a /dev/nvme3n1
 # wipefs -a /dev/nvme4n1
-# zpool labelclear -f /dev/nvme0n1
+# zpool labelclear -f /dev/nvme0n1§
 # zpool labelclear -f /dev/nvme1n1
 # zpool labelclear -f /dev/nvme2n1
 # zpool labelclear -f /dev/nvme3n1

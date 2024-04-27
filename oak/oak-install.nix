@@ -1,5 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
+  # Determine the base path based on the existence of /mnt/etc/nixos
+  basePath = if lib.fileExists "/mnt/etc/nixos/configuration.nix" then "/mnt" else "";
+  jsonPath = "${basePath}/etc/nixos/systemParams.json";
+
   # Read the JSON file and decode it
   jsonContent = builtins.readFile "./systemParams.json";
   systemParams = builtins.fromJSON jsonContent;
