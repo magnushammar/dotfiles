@@ -23,6 +23,7 @@ oak/live/home.nix
 ### Move to basic Flake configuration
 - `nix-shell -p git`
 - clone dotfiles from https://github.com/magnushammar/dotfiles.git
-- rebuild
+- go to your dotfiles machine configuration
+- `sudo nixos-rebuild switch --impure --flake .#oak` (#configuration-name)
 
 ### Move to live Flake configuration

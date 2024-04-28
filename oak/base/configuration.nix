@@ -91,7 +91,6 @@ in
   services.xserver.desktopManager.plasma5.enable = true;
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.displayManager.sddm.wayland.enable = false;
-
   ########## OTHER HARDWARE ##########
 
   sound.enable = true;
@@ -134,13 +133,6 @@ in
   environment.systemPackages = with pkgs; [
     kate
     git
-    wget
-#    dotnet-sdk_8 # keep other versions in nix-shells
-    samba
-#    docker
-    cifs-utils
-#    zip
-    lsof
   ];
 
   users.users.hammar = {
@@ -149,5 +141,6 @@ in
     initialHashedPassword = "${systemParams.hashedPassword}";
   };
 
+  system.stateVersion = "23.11";
 
 }
