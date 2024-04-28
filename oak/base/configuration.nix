@@ -1,10 +1,5 @@
 { config, pkgs, lib, ... }:
 
-
-#imports = [
-#  ./oak-bootstrap.nix
-#];
-
   boot.loader.grub = {
     enable = true;
     zfsSupport = true;
@@ -32,7 +27,6 @@
   nixpkgs.config.permittedInsecurePackages = [
     "electron-25.9.0"
   ];
-
   
   # fileSystems."/mnt/rygel/files" = {
   #   device = "//rygel/files";
