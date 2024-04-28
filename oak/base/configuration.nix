@@ -1,5 +1,16 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Determine the base path based on the existence of /mnt/etc/nixos
+  basePath = if builtins.pathExists "/mnt/etc/nixos/configuration.nix" then "/mnt" else "";
+  jsonPath = "${basePath}/etc/nixos/systemParams.json";
+
+  # Read the JSON file and decode it
+  jsonContent = builtins.readFile jsonPath;
+  systemParams = builtins.fromJSON jsonContent;
+in
+{
+  ########## Local File Systems ##########
   boot.loader.grub = {
     enable = true;
     zfsSupport = true;
@@ -10,6 +21,7 @@
     ];
   };
   
+  # Specifically for ZFS
   networking.hostId = "${systemParams.networkingHostId}";
 
   fileSystems."/" = { device = "zpool/root"; fsType = "zfs"; };
@@ -20,14 +32,14 @@
   fileSystems."/home/hammar/github" = { device = "zpool/home/github"; fsType = "zfs"; };
   fileSystems."/home/hammar/clickhouse" = { device = "zpool/home/clickhouse"; fsType = "zfs"; };
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
-   
-  swapDevices = [ ];
 
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
+  services.zfs.autoScrub.enable = true;
+  services.zfs.autoScrub.interval = "weekly";
+
+  swapDevices = [ ];
   
+  ########## Network File Systems ##########
+
   # fileSystems."/mnt/rygel/files" = {
   #   device = "//rygel/files";
   #   fsType = "cifs";
@@ -56,14 +68,15 @@
   #   ];
   # };
 
-  services.zfs.autoScrub.enable = true;
-  services.zfs.autoScrub.interval = "weekly";
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
 
   ########## NIX  ##########
-  nix.settings.experimental-features = [ "nix-command" ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   ########## GRAPHICS ##########
-
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia.modesetting.enable = true;
 
@@ -116,8 +129,6 @@
    "nvidia-settings"
  ];
 
-  swapDevices = [ ];
-
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -131,5 +142,12 @@
 #    zip
     lsof
   ];
+
+  users.users.hammar = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    initialHashedPassword = "${systemParams.hashedPassword}";
+  };
+
 
 }
