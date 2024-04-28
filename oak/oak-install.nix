@@ -5,7 +5,7 @@ let
   jsonPath = "${basePath}/etc/nixos/systemParams.json";
 
   # Read the JSON file and decode it
-  jsonContent = builtins.readFile "./systemParams.json";
+  jsonContent = builtins.readFile jsonPath;
   systemParams = builtins.fromJSON jsonContent;
 in
 {
@@ -39,6 +39,10 @@ in
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     initialHashedPassword = "${systemParams.hashedPassword}";
   };
+
+  environment.systemPackages = with pkgs; [
+    git
+  ];
 
   system.stateVersion = "23.11";
 }
