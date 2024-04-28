@@ -87,9 +87,7 @@ mount -o umask=077 ${ESP_PARTITION}p1 /mnt/boot
 ####### Configure for installation ##########
 # NixOS, User, ZFS, Git, Region.
 nixos-generate-config --root /mnt
-cp dotfiles/oak/oak-install.nix /mnt/etc/nixos/configuration.nix
-cp dotfiles/oak/oak-filesystems.nix /mnt/etc/nixos/
-
+cp dotfiles/oak/install.nix /mnt/etc/nixos/configuration.nix
 
 ########## Get or Create Hashed Password ##########
 
