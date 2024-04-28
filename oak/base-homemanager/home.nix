@@ -12,21 +12,22 @@ in
 {
 
   home.packages = with pkgs; [
-    spotify
-    bitwarden-cli
+    #spotify
+    #bitwarden-cli
     bitwarden
-    firefox
+    #firefox
     google-chrome
-    jetbrains.rider
-    obsidian
-    vscode
-    github-desktop
-    #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
-    libreoffice-fresh
-    jetbrains.datagrip
-    todoist-electron
-    dropbox
-    jetbrains.pycharm-professional
+    #jetbrains.rider
+    #obsidian
+    #vscode
+    #github-desktop
+    # vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
+    #libreoffice-fresh
+    #jetbrains.datagrip
+    #todoist-electron
+    #dropbox
+    #jetbrains.pycharm-professional
+
   ];
 
   home.sessionVariables = {
