@@ -7,7 +7,7 @@
 # wipefs -a /dev/nvme2n1
 # wipefs -a /dev/nvme3n1
 # wipefs -a /dev/nvme4n1
-# zpool labelclear -f /dev/nvme0n1§
+# zpool labelclear -f /dev/nvme0n1
 # zpool labelclear -f /dev/nvme1n1
 # zpool labelclear -f /dev/nvme2n1
 # zpool labelclear -f /dev/nvme3n1
@@ -100,8 +100,8 @@ if [ "$password" != "$password_confirm" ]; then
 fi
 
 # Generate the hashed password
-hashedPassword=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 "$password"')
-echo "haashedPassword: $hashedPassword"
+hashedPassword=$(nix-shell -p mkpasswd --run "mkpasswd -m sha-512 '$password'")
+echo "hashedPassword: $hashedPassword"
 
 # Parameters for configuration.nix
 ESP_UUID=$(blkid -s UUID -o value ${ESP_DISK}p1) # Boot partition
