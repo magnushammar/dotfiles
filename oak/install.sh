@@ -82,7 +82,7 @@ mkfs.ext4 -L nix-secondary ${ESP_DISK}p2
 ####### Configure for installation ##########
 # NixOS, User, ZFS, Git, Region.
 nixos-generate-config --root /mnt
-cp dotfiles/oak/install.nix /mnt/etc/nixos/configuration.nix
+cp ${HOME}/dotfiles/oak/configuration.nix /mnt/etc/nixos/configuration.nix
 
 ########## Get or Create Hashed Password ##########
 
@@ -99,7 +99,7 @@ if [ "$password" != "$password_confirm" ]; then
 fi
 
 # Generate the hashed password
-hashedPassword=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
+hashedPassword=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 "$password"')
 
 # Parameters for configuration.nix
 ESP_UUID=$(blkid -s UUID -o value ${ESP_DISK}p1) # Boot partition
