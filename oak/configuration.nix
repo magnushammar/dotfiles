@@ -1,45 +1,12 @@
 { config, pkgs, lib, ... }:
 
-let
-  # Determine the base path based on the existence of /mnt/etc/nixos
-  basePath = if builtins.pathExists "/mnt/etc/nixos/configuration.nix" then "/mnt" else "";
-  jsonPath = "${basePath}/etc/nixos/systemParams.json";
-
-  # Read the JSON file and decode it
-  jsonContent = builtins.readFile jsonPath;
-  systemParams = builtins.fromJSON jsonContent;
-in
 {
-  ########## Local File Systems ##########
-  boot.loader.grub = {
-    enable = true;
-    zfsSupport = true;
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-    mirroredBoots = [
-      { devices = [ "nodev"]; path = "/boot"; }
-    ];
-  };
   
-  # Specifically for ZFS
-  networking.hostId = "${systemParams.networkingHostId}";
+  imports = [
+    ./base.nix
+  ];
 
-  fileSystems."/" = { device = "zpool/root"; fsType = "zfs"; };
-  fileSystems."/nix" = { device = "zpool/nix"; fsType = "zfs"; };
-  fileSystems."/var" = { device = "zpool/var"; fsType = "zfs"; };
-  fileSystems."/home" = { device = "zpool/home"; fsType = "zfs"; };
-  fileSystems."/home/hammar/data" = { device = "zpool/home/data"; fsType = "zfs"; };
-  fileSystems."/home/hammar/github" = { device = "zpool/home/github"; fsType = "zfs"; };
-  fileSystems."/home/hammar/clickhouse" = { device = "zpool/home/clickhouse"; fsType = "zfs"; };
-  fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
-
-  services.zfs.autoScrub.enable = true;
-  services.zfs.autoScrub.interval = "weekly";
-
-  swapDevices = [ ];
-  
-  ########## Network File Systems ##########
-
+    ########## Network File Systems ##########
   fileSystems."/mnt/rygel/files" = {
     device = "//rygel/files";
     fsType = "cifs";
@@ -142,21 +109,13 @@ in
   environment.systemPackages = with pkgs; [
     kate
     git
-    wget
-    dotnet-sdk_8 # keep other versions in nix-shells
+    #wget
+    #dotnet-sdk_8 # keep other versions in nix-shells
     samba
-    docker
-    cifs-utils
-    zip
-    lsof
+    #docker
+    #cifs-utils
+    #zip
+    #lsof
   ];
-
-  users.users.hammar = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    initialHashedPassword = "${systemParams.hashedPassword}";
-  };
-
-  system.stateVersion = "23.11";
 
 }

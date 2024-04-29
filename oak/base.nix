@@ -24,6 +24,7 @@ in
   
   networking.hostId = "${systemParams.networkingHostId}";
 
+  # ZFS Filesystem
   fileSystems."/" = { device = "zpool/root"; fsType = "zfs"; };
   fileSystems."/nix" = { device = "zpool/nix"; fsType = "zfs"; };
   fileSystems."/var" = { device = "zpool/var"; fsType = "zfs"; };
@@ -31,10 +32,41 @@ in
   fileSystems."/home/hammar/data" = { device = "zpool/home/data"; fsType = "zfs"; };
   fileSystems."/home/hammar/github" = { device = "zpool/home/github"; fsType = "zfs"; };
   fileSystems."/home/hammar/clickhouse" = { device = "zpool/home/clickhouse"; fsType = "zfs"; };
+
+  services.zfs.autoScrub.enable = true;
+  services.zfs.autoScrub.interval = "weekly";
+
+
+  # Boot Filesystem
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
-   
+
+  # Secondary EXT4 Filesystem
+  fileSystems."/home/hammar/secondary" = { device = "/dev/disk/by-uuid/${systemParams.ext4UUID}"; fsType = "ext4"; };
+
+  # Backup Filesystem (TODO: parameterize based on serialnumber)
+  # fileSystems."/home/hammar/backup" = {
+  #   device = "/dev/disk/by-uuid/8d02c6fd-a621-490e-bdad-643fbb22be1d";
+  #   fsType = "ext4";
+  #   options = [ "noatime" "nodiratime" ];
+  # };
+  
   swapDevices = [ ];
   
+  # Adding system activation script to change owner of extra user directories
+  systemd.services.setDataOwnership = {
+    description = "Set ownership for /home/hammar/{extra} directories";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "zfs.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainsAfterExit = false;
+      ExecStart = ''
+        ${pkgs.coreutils}/bin/chown -R hammar:users /home/hammar/data
+        ${pkgs.coreutils}/bin/chown -R hammar:users /home/hammar/github
+        ${pkgs.coreutils}/bin/chown -R hammar:users /home/hammar/clickhouse
+      '';
+    };
+
   console.keyMap = "sv-latin1";
   users.users.hammar = {
     isNormalUser = true;

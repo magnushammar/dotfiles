@@ -1,24 +1,34 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Determine the base path based on the existence of /mnt/etc/nixos
+  basePath = if builtins.pathExists "/mnt/etc/nixos/configuration.nix" then "/mnt" else "";
+  jsonPath = "${basePath}/etc/nixos/systemParams.json";
+
+  # Read the JSON file and decode it
+  jsonContent = builtins.readFile jsonPath;
+  systemParams = builtins.fromJSON jsonContent;
+in
 {
 
   home.packages = with pkgs; [
     #spotify
     #bitwarden-cli
     bitwarden
-    firefox
+    #firefox
     google-chrome
     #jetbrains.rider
     #obsidian
-    #vscode
+    vscode
     #github-desktop
-    # vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
+    #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
     #libreoffice-fresh
     #jetbrains.datagrip
     #todoist-electron
     #dropbox
     #jetbrains.pycharm-professional
-
+    lolcat
+    cowsay
   ];
 
   home.sessionVariables = {

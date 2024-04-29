@@ -23,24 +23,23 @@ fi
 
 # Serial numbers of the disks
 serial_numbers=(
-  "S69ENF0WB69369T" # MB 1 (from cpu)
   "S69ENF0WB69363F" # MB 2
   "S69ENF0WB69149W" # MB 3
   "S69ENF0WB69358N" # Hyper card 
   "S69ENF0WB69366M" # Ice card
 )
 
-# Identify the disk for the ESP (EFI System Partition)
+# Identify the disk for the ESP (EFI System Partition) and Utility Partition
 esp_serial_number="S69ENF0WB69369T"
 esp_device_link=$(ls -l /dev/disk/by-id/*${esp_serial_number}* | grep -v "part" | head -n 1 | awk '{print $9}')
-ESP_PARTITION=$(readlink -f $esp_device_link)
-echo "ESP disk: $ESP_PARTITION"
+ESP_DISK=$(readlink -f $esp_device_link)
+echo "ESP disk: $ESP_DISK"
 
 # Partition the disk
-parted $ESP_PARTITION --script -- mklabel gpt
-parted $ESP_PARTITION --script -- mkpart ESP fat32 1MiB 512MiB
-parted $ESP_PARTITION --script -- set 1 esp on
-parted $ESP_PARTITION --script -- mkpart primary 512MiB 100%
+parted $ESP_DISK --script -- mklabel gpt
+parted $ESP_DISK --script -- mkpart ESP fat32 1MiB 512MiB
+parted $ESP_DISK --script -- set 1 esp on
+parted $ESP_DISK --script -- mkpart primary 512MiB 100%
 
 # Identify the disks for the raidz2 pool
 raidz2_disks=()
@@ -80,9 +79,11 @@ mount -t zfs zpool/var /mnt/var
 mount -t zfs zpool/home /mnt/home
 
 # Setup and mount the EFI System Partition (boot)
-mkfs.fat -F 32 -n BOOT ${ESP_PARTITION}p1
+mkfs.fat -F 32 -n BOOT ${ESP_DISK}p1
 mkdir -p /mnt/boot
-mount -o umask=077 ${ESP_PARTITION}p1 /mnt/boot
+mount -o umask=077 ${ESP_DISK}p1 /mnt/boot
+
+mkfs.ext4 -L nix-secondary ${ESP_DISK}p2
 
 ####### Configure for installation ##########
 # NixOS, User, ZFS, Git, Region.
@@ -106,9 +107,10 @@ fi
 # Generate the hashed password
 hashedPassword=$(nix-shell -p mkpasswd --run 'mkpasswd -m sha-512 <<< "$password"')
 
-######### Get parameters for configuration.nix #########
-# Identify the boot partition and set networking host id for ZFS
-ESP_UUID=$(blkid -s UUID -o value ${ESP_PARTITION}p1) 
+# Parameters for configuration.nix
+ESP_UUID=$(blkid -s UUID -o value ${ESP_DISK}p1) # Boot partition
+EXT4_UUID=$(blkid -s UUID -o value ${ESP_DISK}p2) # Secondary EXT4 partition
+# Networking host id needed for ZFS
 NETWORKING_HOST_ID=$(head -c 4 /dev/urandom | od -A none -t x8 | awk '{print substr($1,length($1)-7,8)}') # Configuration.nix need to give ZFS a unique Networking Host ID
 
 ########## Save the system parameters to a file ##########
@@ -116,7 +118,8 @@ cat <<EOF > /mnt/etc/nixos/systemParams.json
 {
     "hashedPassword": "$hashedPassword",
     "networkingHostId": "$NETWORKING_HOST_ID",
-    "espUUID": "$ESP_UUID"
+    "espUUID": "$ESP_UUID",
+    "ext4UUID": "$EXT4_UUID"
 }
 EOF
 
