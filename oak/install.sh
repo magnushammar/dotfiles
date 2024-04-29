@@ -1,9 +1,3 @@
-# If NixOS is already installed abort script
-# Check if NixOS is installed by verifying the absence of a typical live environment directory
-if [ ! -d "/mnt/etc/nixos" ] && [ -d "/etc/nixos" ]; then
-  echo "NixOS is already installed. Aborting."
-  exit 1
-fi
 
 ##################################################
 ## DANGER ZONE THIS SECTION WILL NUKE ALL DISKS ##
