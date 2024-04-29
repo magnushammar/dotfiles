@@ -65,7 +65,7 @@
   services.xserver.xkb.layout = "se";
   time.timeZone = "Europe/Stockholm";
   services.timesyncd.enable = true;
-  i18n.defaultLocale = "sv_SE.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   ########## OTHER HARDWARE ##########
 

@@ -40,3 +40,5 @@ sudo nixos-rebuild switch --impure --flake .#oak
 ## Todo
 - [ ] Fix the tripple password request bug in install.sh  
 - [ ] Set up secrets with Agenix
+
+071

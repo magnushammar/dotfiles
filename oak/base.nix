@@ -68,7 +68,7 @@ in
     };
   };
 
-  i18n.defaultLocale = "en_US.UTF-8";
+  
   #console.keyMap = "sv-latin1";
   users.users.hammar = {
     isNormalUser = true;
