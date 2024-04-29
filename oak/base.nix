@@ -66,8 +66,9 @@ in
         ${pkgs.coreutils}/bin/chown -R hammar:users /home/hammar/clickhouse
       '';
     };
+  };
 
-  console.keyMap = "sv-latin1";
+  #console.keyMap = "sv-latin1";
   users.users.hammar = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
