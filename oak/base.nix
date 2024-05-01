@@ -41,15 +41,23 @@ in
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
 
   # Secondary EXT4 Filesystem
-  fileSystems."/home/hammar/secondary" = { device = "/dev/disk/by-uuid/${systemParams.ext4UUID}"; fsType = "ext4"; };
+  fileSystems."/home/hammar/secondary" = { 
+    device = "/dev/disk/by-uuid/${systemParams.ext4UUID}"; 
+    fsType = "ext4"; };
 
   # Backup Filesystem (TODO: parameterize based on serialnumber)
-  # fileSystems."/home/hammar/backup" = {
-  #   device = "/dev/disk/by-uuid/8d02c6fd-a621-490e-bdad-643fbb22be1d";
-  #   fsType = "ext4";
-  #   options = [ "noatime" "nodiratime" ];
-  # };
-  
+  fileSystems."/home/hammar/backup" = {
+    device = "/dev/disk/by-uuid/8d02c6fd-a621-490e-bdad-643fbb22be1d";
+    fsType = "ext4";
+    options = [ "noatime" "nodiratime" ];
+  };
+
+  # Adding udev rules to hide Secondary and Backup devices from GUI
+  services.udev.extraRules = ''
+    SUBSYSTEM=="block", ENV{ID_FS_UUID}=="${systemParams.ext4UUID}", ENV{UDISKS_IGNORE}="1"
+    SUBSYSTEM=="block", ENV{ID_FS_UUID}=="8d02c6fd-a621-490e-bdad-643fbb22be1d", ENV{UDISKS_IGNORE}="1"
+  '';
+
   swapDevices = [ ];
   
   # Adding system activation script to change owner of extra user directories
