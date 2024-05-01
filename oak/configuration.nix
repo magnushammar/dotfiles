@@ -6,6 +6,17 @@
     ./base.nix
   ];
 
+  environment.systemPackages = with pkgs; [
+    kate
+    git
+    dotnet-sdk_8 # keep other versions in nix-shells
+    samba
+    docker
+    cifs-utils
+    zip
+  ];
+
+
     ########## Network File Systems ##########
   fileSystems."/mnt/rygel/files" = {
     device = "//rygel/files";
@@ -65,7 +76,16 @@
   services.xserver.xkb.layout = "se";
   time.timeZone = "Europe/Stockholm";
   services.timesyncd.enable = true;
-  i18n.defaultLocale = "en_US.UTF-8";
+  
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_TIME = "sv_SE.UTF-8";
+      LC_NUMERIC = "sv_SE.UTF-8";
+      LC_MONETARY = "sv_SE.UTF-8";
+      LC_MEASUREMENT = "sv_SE.UTF-8";
+    };
+  };
 
   ########## OTHER HARDWARE ##########
 
@@ -105,17 +125,5 @@
  ];
 
   virtualisation.docker.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    kate
-    git
-    #wget
-    #dotnet-sdk_8 # keep other versions in nix-shells
-    samba
-    #docker
-    #cifs-utils
-    #zip
-    #lsof
-  ];
 
 }

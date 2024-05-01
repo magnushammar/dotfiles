@@ -12,28 +12,30 @@ in
 {
 
   home.packages = with pkgs; [
-    #spotify
-    #bitwarden-cli
+    spotify
+    bitwarden-cli
     bitwarden
-    #firefox
+    firefox
     google-chrome
-    #jetbrains.rider
-    #obsidian
+    jetbrains.rider
+    obsidian
     vscode
-    #github-desktop
+    github-desktop
     #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
-    #libreoffice-fresh
-    #jetbrains.datagrip
-    #todoist-electron
-    #dropbox
-    #jetbrains.pycharm-professional
+    libreoffice-fresh
+    jetbrains.datagrip
+    todoist-electron
+    dropbox
+    jetbrains.pycharm-professional
     lolcat
-    cowsay
+    todoist-electron
+    microsoft-edge
   ];
 
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
+
 
   programs.bash = {
     enable = true;
@@ -50,6 +52,8 @@ in
 
   home.username = "hammar";
   home.homeDirectory = "/home/hammar";
+
+  xsession.numlock.enable = true;
 
   home.stateVersion = "23.11"; # Please read update notes before changing.
 

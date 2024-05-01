@@ -56,7 +56,8 @@ in
   systemd.services.setDataOwnership = {
     description = "Set ownership for /home/hammar/{extra} directories";
     wantedBy = [ "multi-user.target" ];
-    after = [ "zfs.target" ];
+    after = [ "systemd-user-sessions.service" ]; # Trigger after user sessions are ready
+    #partOf = [ "systemd-user-sessions.service" ]; # Consider this part of user session setup
     serviceConfig = {
       Type = "oneshot";
       RemainsAfterExit = false;
