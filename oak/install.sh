@@ -17,14 +17,14 @@
 
 # Serial numbers of the disks
 serial_numbers=(
+  "S69ENF0WB69369T" # MB 1
   "S69ENF0WB69363F" # MB 2
   "S69ENF0WB69149W" # MB 3
   "S69ENF0WB69358N" # Hyper card 
-  "S69ENF0WB69366M" # Ice card
 )
 
 # Identify the disk for the ESP (EFI System Partition) and Utility Partition
-esp_serial_number="S69ENF0WB69369T"
+esp_serial_number="S69ENF0WB69366M" # Slow Ice card
 esp_device_link=$(ls -l /dev/disk/by-id/*${esp_serial_number}* | grep -v "part" | head -n 1 | awk '{print $9}')
 ESP_DISK=$(readlink -f $esp_device_link)
 echo "ESP disk: $ESP_DISK"
