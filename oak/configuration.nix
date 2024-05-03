@@ -14,37 +14,71 @@
     docker
     cifs-utils
     zip
+#    quickget
+    quickemu
+    qemu
+    qemu_kvm
+    virt-manager
+    libvirt
+    virt-viewer
+    OVMF
+    kdiskmark
   ];
 
-
-    ########## Network File Systems ##########
-  fileSystems."/mnt/rygel/files" = {
-    device = "//rygel/files";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/nixos/hammar-nixos-cfg/rygelcredentials"
-      "uid=${toString config.users.users.hammar.uid}"
-      "gid=${toString config.users.groups.users.gid}"
-      "file_mode=0660"
-      "dir_mode=0770"
-      "noauto"
-      "x-systemd.automount"
-    ];
+  # TODO: SMB IS JUST A FUCKING DUMPSTER FIRE NOW-
+   services.samba = {
+    enable = true;
+    extraConfig = ''
+      workgroup = "OAK"
+      security = user
+      map to guest = Bad User
+    '';
+    shares = {
+      public = {
+        path = "/home/hammar/data/vms/shared";
+        guestOk = true;
+        writable = true;
+        browseable = true;
+      };
+    };
   };
 
-  fileSystems."/mnt/rygel/arkiv" = {
-    device = "//rygel/arkiv";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/nixos/hammar-nixos-cfg/rygelcredentials"
-      "uid=${toString config.users.users.hammar.uid}"
-      "gid=${toString config.users.groups.users.gid}"
-      "file_mode=0660"
-      "dir_mode=0770"
-      "noauto"
-      "x-systemd.automount"
-    ];
-  };
+  networking.firewall.allowedTCPPorts = [ 139 445 ];
+  networking.firewall.allowedUDPPorts = [ 137 138 ];
+
+  # # Ensure the mount directory for Rygel exists
+  # systemd.tmpfiles.rules = [
+  #   "d /mnt/rygel/files 0770 hammar users - -"
+  # ];
+
+  #   ########## Network File Systems ##########
+  # fileSystems."/mnt/rygel/files" = {
+  #   device = "//rygel.local/files";
+  #   fsType = "cifs";
+  #   options = [
+  #     "credentials=/etc/nixos/hammar-nixos-cfg/rygelcredentials"
+  #     "uid=${toString config.users.users.hammar.uid}"
+  #     "gid=${toString config.users.groups.users.gid}"
+  #     "file_mode=0660"
+  #     "dir_mode=0770"
+  #     "noauto"
+  #     "x-systemd.automount"
+  #   ];
+  # };
+
+  # fileSystems."/mnt/rygel/arkiv" = {
+  #   device = "//rygel.local/arkiv";
+  #   fsType = "cifs";
+  #   options = [
+  #     #"credentials=/etc/nixos/hammar-nixos-cfg/rygelcredentials"
+  #     "uid=${toString config.users.users.hammar.uid}"
+  #     "gid=${toString config.users.groups.users.gid}"
+  #     "file_mode=0660"
+  #     "dir_mode=0770"
+  #     "noauto"
+  #     "x-systemd.automount"
+  #   ];
+  # };
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
@@ -65,10 +99,12 @@
   };
 
   ########## DESKTOP ENVIRONMENT ##########
-  services.xserver.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.sddm.wayland.enable = false;
+  services.xserver = {
+    enable = true;
+    desktopManager.plasma5.enable = true;
+    displayManager.sddm.enable = true;
+    displayManager.sddm.wayland.enable = false;
+  };
 
   ########## REGIONAL & LOCALE ##########
 
@@ -117,13 +153,30 @@
     "127.0.1.1" = ["oak"];
   };
 
-  ########## SOFTWARE ##########
+########## SOFTWARE ##########
   
  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
    "nvidia-x11"
    "nvidia-settings"
  ];
 
-  virtualisation.docker.enable = true;
+ virtualisation.docker.enable = true;
+
+ ########## Want to run Windows in a VM ##########
+
+  #virtualisation.libvirtd.enable = true;
+  #virtualisation.kvmgt.enable = true;
+  #programs.dconf.enable = true;
+  #programs.virt-manager.enable = true;
+  #boot.kernelModules = ["kvm-intel"];
+  
+  # systemd.services.libvirtd = {
+  #   wantedBy = [ "multi-user.target" ];
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.libvirt}/bin/libvirtd --daemon --config /etc/libvirt/libvirtd.conf";
+  #   };
+  # };
+  
+  #environment.variables.LIBVIRT_DEFAULT_URI = "qemu:///system";
 
 }

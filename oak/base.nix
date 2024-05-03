@@ -36,7 +36,7 @@ in
   services.zfs.autoScrub.enable = true;
   services.zfs.autoScrub.interval = "weekly";
 
-
+  
   # Boot Filesystem
   fileSystems."/boot" = { device = "/dev/disk/by-uuid/${systemParams.espUUID}"; fsType = "vfat"; };
 
@@ -81,7 +81,7 @@ in
   #console.keyMap = "sv-latin1";
   users.users.hammar = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "libvirtd" ]; # Enable ‘sudo’ etc for the user.
     initialHashedPassword = "${systemParams.hashedPassword}";
   };
 
