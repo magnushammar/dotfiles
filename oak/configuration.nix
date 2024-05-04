@@ -15,14 +15,14 @@
     cifs-utils
     zip
 #    quickget
-    quickemu
-    qemu
-    qemu_kvm
-    virt-manager
-    libvirt
-    virt-viewer
-    OVMF
-    kdiskmark
+#    quickemu
+#    qemu
+#    qemu_kvm
+#    virt-manager
+#    libvirt
+#    virt-viewer
+#    OVMF
+    dropbox
   ];
 
   # TODO: SMB IS JUST A FUCKING DUMPSTER FIRE NOW-
