@@ -1,28 +1,26 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, pkgs-unstable, lib, ... }:
+#let
+#  quickemu = pkgs.callPackage /home/hammar/dotfiles/nixes/quickemu/quickemu.nix {};
+#in
 {
   
   imports = [
     ./base.nix
   ];
 
-  environment.systemPackages = with pkgs; [
-    kate
-    git
-    dotnet-sdk_8 # keep other versions in nix-shells
-    samba
-    docker
-    cifs-utils
-    zip
-#    quickget
-#    quickemu
-#    qemu
-#    qemu_kvm
-#    virt-manager
-#    libvirt
-#    virt-viewer
-#    OVMF
-    dropbox
+  environment.systemPackages = [
+    pkgs.kate
+    pkgs.git
+    pkgs.dotnet-sdk_8 # keep other versions in nix-shells
+    #samba
+    pkgs.docker
+    pkgs.cifs-utils
+    pkgs.zip
+    pkgs.dropbox
+    (import /home/hammar/dotfiles/nixes/quickemu/quickemu.nix)
+    #(pkgs.callPackage ~/dotfiles/nixes/quickemu/quickemu.nix {})
+    #pkgs-unstable.quickemu
+    #pkgs.quickemu
   ];
 
   # TODO: SMB IS JUST A FUCKING DUMPSTER FIRE NOW-
@@ -52,19 +50,19 @@
   # ];
 
   #   ########## Network File Systems ##########
-  # fileSystems."/mnt/rygel/files" = {
-  #   device = "//rygel.local/files";
-  #   fsType = "cifs";
-  #   options = [
-  #     "credentials=/etc/nixos/hammar-nixos-cfg/rygelcredentials"
-  #     "uid=${toString config.users.users.hammar.uid}"
-  #     "gid=${toString config.users.groups.users.gid}"
-  #     "file_mode=0660"
-  #     "dir_mode=0770"
-  #     "noauto"
-  #     "x-systemd.automount"
-  #   ];
-  # };
+  fileSystems."/home/hammar/rygel/files" = {
+    device = "//rygel.local/files";
+    fsType = "cifs";
+    options = [
+      "credentials=/etc/nixos/rygelcredentials"
+      "uid=${toString config.users.users.hammar.uid}"
+      "gid=${toString config.users.groups.users.gid}"
+      "file_mode=0660"
+      "dir_mode=0770"
+      "noauto"
+      "x-systemd.automount"
+    ];
+  };
 
   # fileSystems."/mnt/rygel/arkiv" = {
   #   device = "//rygel.local/arkiv";
