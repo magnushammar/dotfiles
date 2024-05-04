@@ -1,7 +1,9 @@
 { config, pkgs, pkgs-unstable, lib, ... }:
-#let
-#  quickemu = pkgs.callPackage /home/hammar/dotfiles/nixes/quickemu/quickemu.nix {};
-#in
+let
+  customQuickemu = pkgs-unstable.quickemu.override {
+    qemu = pkgs.qemu_full;
+  };
+in
 {
   
   imports = [
@@ -17,37 +19,30 @@
     pkgs.cifs-utils
     pkgs.zip
     pkgs.dropbox
-    (import /home/hammar/dotfiles/nixes/quickemu/quickemu.nix)
-    #(pkgs.callPackage ~/dotfiles/nixes/quickemu/quickemu.nix {})
+    #(import /home/hammar/dotfiles/nixes/quickemu/quickemu.nix)
     #pkgs-unstable.quickemu
-    #pkgs.quickemu
+    customQuickemu
   ];
 
-  # TODO: SMB IS JUST A FUCKING DUMPSTER FIRE NOW-
-   services.samba = {
-    enable = true;
+  services.samba = {
+    enable = true;  # Enable the Samba service
     extraConfig = ''
-      workgroup = "OAK"
+      [global]
+      workgroup = WORKGROUP
       security = user
       map to guest = Bad User
+
+      [public]
+      path = /home/hammar/Public
+      public = yes
+      writable = yes
+      printable = no
+      guest ok = yes
     '';
-    shares = {
-      public = {
-        path = "/home/hammar/data/vms/shared";
-        guestOk = true;
-        writable = true;
-        browseable = true;
-      };
-    };
   };
 
   networking.firewall.allowedTCPPorts = [ 139 445 ];
   networking.firewall.allowedUDPPorts = [ 137 138 ];
-
-  # # Ensure the mount directory for Rygel exists
-  # systemd.tmpfiles.rules = [
-  #   "d /mnt/rygel/files 0770 hammar users - -"
-  # ];
 
   #   ########## Network File Systems ##########
   fileSystems."/home/hammar/rygel/files" = {
