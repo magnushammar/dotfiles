@@ -19,8 +19,6 @@ in
     pkgs.cifs-utils
     pkgs.zip
     pkgs.dropbox
-    #(import /home/hammar/dotfiles/nixes/quickemu/quickemu.nix)
-    #pkgs-unstable.quickemu
     customQuickemu
   ];
 
@@ -31,13 +29,24 @@ in
       workgroup = WORKGROUP
       security = user
       map to guest = Bad User
-
+      guest account = nobody
+      
       [public]
       path = /home/hammar/Public
       public = yes
       writable = yes
-      printable = no
       guest ok = yes
+
+      [dropbox]
+      path = /home/hammar/data/Dropbox
+      valid users = hammar, @users
+      writable = yes
+      printable = no
+      guest ok = no
+      force user = hammar
+      force group = users
+      create mask = 0660
+      directory mask = 0770
     '';
   };
 
