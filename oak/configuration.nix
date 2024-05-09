@@ -14,13 +14,17 @@ in
     pkgs.kate
     pkgs.git
     pkgs.dotnet-sdk_8 # keep other versions in nix-shells
-    #samba
     pkgs.docker
     pkgs.cifs-utils
     pkgs.zip
     pkgs.dropbox
     customQuickemu
+    pkgs.yubikey-manager
+    pkgs.yubikey-personalization-gui
   ];
+
+  security.pam.u2f.enable = true;
+  services.pcscd.enable = true;
 
   services.samba = {
     enable = true;  # Enable the Samba service
