@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, pkgs-unstable, lib, ... }:
 
 let
   # Determine the base path based on the existence of /mnt/etc/nixos
@@ -11,28 +11,28 @@ let
 in
 {
 
-  home.packages = with pkgs; [
-    spotify
-    bitwarden-cli
-    bitwarden
-    firefox
-    google-chrome
-    jetbrains.rider
-    obsidian
-    vscode
-    github-desktop
+  home.packages = [
+    pkgs.spotify
+    pkgs.bitwarden-cli
+    pkgs.bitwarden
+    pkgs.firefox
+    pkgs.google-chrome
+    pkgs.jetbrains.rider
+    pkgs.obsidian
+    pkgs-unstable.vscode
+    pkgs.github-desktop
     #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
-    libreoffice-fresh
-    jetbrains.datagrip
-    todoist-electron
-    dropbox
-    jetbrains.pycharm-professional
-    lolcat
-    todoist-electron
-    microsoft-edge
-    yubikey-personalization-gui
-    github-cli
-    kcalc
+    pkgs.libreoffice-fresh
+    pkgs.jetbrains.datagrip
+    pkgs.todoist-electron
+    pkgs.dropbox
+    pkgs.jetbrains.pycharm-professional
+    pkgs.lolcat
+    pkgs.todoist-electron
+    pkgs.microsoft-edge
+    pkgs.yubikey-personalization-gui
+    pkgs.github-cli
+    pkgs.kcalc
   ];
 
   home.sessionVariables = {
