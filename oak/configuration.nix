@@ -166,5 +166,7 @@ in
  ];
 
  virtualisation.docker.enable = true;
+ virtualisation.spiceUSBRedirection.enable = true;
+ services.spice-vdagentd.enable = true;
 
 }
