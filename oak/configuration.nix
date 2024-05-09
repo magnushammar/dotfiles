@@ -20,10 +20,22 @@ in
     pkgs.dropbox
     customQuickemu
     pkgs.yubikey-manager
+    pkgs.ghostscript
   ];
 
   security.pam.u2f.enable = true;
   services.pcscd.enable = true;
+
+  services.dbus.packages = [ 
+    pkgs.cups
+    pkgs.system-config-printer ];
+
+
+  services.printing = {
+    enable = true;
+    drivers = [pkgs.hplip];
+    logLevel = "debug";
+  };
 
   services.samba = {
     enable = true;  # Enable the Samba service
@@ -150,6 +162,8 @@ in
  
   services.avahi.enable = true;
   services.avahi.nssmdns = true;
+  services.avahi.publish.enable = true;
+  services.avahi.publish.userServices = true;
 
   networking.hosts = {
     "192.168.68.52" = ["rygel"];
