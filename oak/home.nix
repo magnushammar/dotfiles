@@ -32,6 +32,7 @@ in
     microsoft-edge
     yubikey-personalization-gui
     github-cli
+    kcalc
   ];
 
   home.sessionVariables = {
@@ -49,6 +50,8 @@ in
 
       # Ensure the history is written after each command
       PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+      alias calc=kcalc
     '';
   };
 
