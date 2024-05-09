@@ -20,7 +20,6 @@ in
     pkgs.dropbox
     customQuickemu
     pkgs.yubikey-manager
-    pkgs.ghostscript
   ];
 
   security.pam.u2f.enable = true;
@@ -34,7 +33,6 @@ in
   services.printing = {
     enable = true;
     drivers = [pkgs.hplip];
-    logLevel = "debug";
   };
 
   services.samba = {
