@@ -30,6 +30,8 @@ in
     lolcat
     todoist-electron
     microsoft-edge
+    yubikey-personalization-gui
+    github-cli
   ];
 
   home.sessionVariables = {

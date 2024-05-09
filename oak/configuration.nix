@@ -20,7 +20,6 @@ in
     pkgs.dropbox
     customQuickemu
     pkgs.yubikey-manager
-    pkgs.yubikey-personalization-gui
   ];
 
   security.pam.u2f.enable = true;
