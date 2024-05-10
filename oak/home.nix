@@ -33,6 +33,7 @@ in
     pkgs.yubikey-personalization-gui
     pkgs.github-cli
     pkgs.kcalc
+    pkgs.vlc
   ];
 
   home.sessionVariables = {
