@@ -35,6 +35,7 @@ in
     pkgs.kcalc
     pkgs.vlc
     pkgs-unstable.masterpdfeditor
+    pkgs.desktop-file-utils
   ];
 
   home.sessionVariables = {
