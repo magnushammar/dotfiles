@@ -19,7 +19,6 @@ in
     pkgs.google-chrome
     pkgs-unstable.jetbrains.rider
     pkgs.obsidian
-    pkgs-unstable.vscode
     pkgs.github-desktop
     #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
     pkgs.libreoffice-fresh

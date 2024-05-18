@@ -8,6 +8,15 @@ in
   
   imports = [
     ./base.nix
+    /home/hammar/dotfiles/oak/vscode.nix
+  ];
+
+  vscode.user = "hammar";  # Replace with your actual username
+  vscode.homeDir = "/home/hammar";  # Replace with your actual home directory
+
+  nixpkgs.latestPackages = [
+    "vscode"
+    "vscode-extensions"
   ];
 
   environment.systemPackages = [
@@ -20,6 +29,7 @@ in
     pkgs.dropbox
     customQuickemu
     pkgs.yubikey-manager
+    pkgs-unstable.vscode
   ];
 
   security.pam.u2f.enable = true;
