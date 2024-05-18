@@ -17,7 +17,7 @@ in
     pkgs.bitwarden
     pkgs.firefox
     pkgs.google-chrome
-    pkgs.jetbrains.rider
+    pkgs-unstable.jetbrains.rider
     pkgs.obsidian
     pkgs-unstable.vscode
     pkgs.github-desktop
