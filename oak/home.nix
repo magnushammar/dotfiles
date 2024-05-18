@@ -34,6 +34,7 @@ in
     pkgs.github-cli
     pkgs.kcalc
     pkgs.vlc
+    pkgs-unstable.masterpdfeditor
   ];
 
   home.sessionVariables = {
@@ -53,6 +54,7 @@ in
       PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
       alias calc=kcalc
+      alias vmwin11="quickemu --vm ~/data/vms/windows-11.conf"
     '';
   };
 
