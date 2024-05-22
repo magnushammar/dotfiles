@@ -55,6 +55,7 @@ in
 
       alias calc=kcalc
       alias vmwin11="quickemu --vm ~/data/vms/windows-11.conf"
+      alias vmwin11-reconnect='nohup remote-viewer spice://127.0.0.1:5930 > /dev/null 2>&1 &'
     '';
   };
 

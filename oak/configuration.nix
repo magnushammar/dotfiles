@@ -30,6 +30,7 @@ in
     customQuickemu
     pkgs.yubikey-manager
     pkgs-unstable.vscode
+    pkgs.remote-viewer
   ];
 
   security.pam.u2f.enable = true;
