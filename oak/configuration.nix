@@ -31,6 +31,7 @@ in
     pkgs.yubikey-manager
     pkgs-unstable.vscode
     pkgs.v4l-utils
+    pkgs.qemu-utils
   ];
 
   security.pam.u2f.enable = true;
