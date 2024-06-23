@@ -11,6 +11,9 @@ in
   ];
 
   environment.systemPackages = [
+    pkgs.ccid
+    pkgs.pcsclite
+    pkgs.pcsctools
     pkgs.kate
     pkgs.git
     pkgs.dotnet-sdk_8 # keep other versions in nix-shells
