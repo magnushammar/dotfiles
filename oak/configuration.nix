@@ -8,15 +8,6 @@ in
   
   imports = [
     ./base.nix
-    /home/hammar/dotfiles/oak/vscode.nix
-  ];
-
-  vscode.user = "hammar";  # Replace with your actual username
-  vscode.homeDir = "/home/hammar";  # Replace with your actual home directory
-
-  nixpkgs.latestPackages = [
-    "vscode"
-    "vscode-extensions"
   ];
 
   environment.systemPackages = [
@@ -24,14 +15,15 @@ in
     pkgs.git
     pkgs.dotnet-sdk_8 # keep other versions in nix-shells
     pkgs.docker
+    pkgs.docker-compose
     pkgs.cifs-utils
     pkgs.zip
     pkgs.dropbox
     customQuickemu
     pkgs.yubikey-manager
-    pkgs-unstable.vscode
     pkgs.v4l-utils
     pkgs.qemu-utils
+    pkgs.direnv
   ];
 
   security.pam.u2f.enable = true;
@@ -133,9 +125,10 @@ in
     displayManager.sddm.wayland.enable = false;
   };
 
+
   ########## REGIONAL & LOCALE ##########
 
-  services.xserver.xkbOptions = "eurosign:e";
+  services.xserver.xkb.options = "eurosign:e";
   services.xserver.xkb.layout = "se";
   time.timeZone = "Europe/Stockholm";
   services.timesyncd.enable = true;
@@ -153,12 +146,12 @@ in
   ########## OTHER HARDWARE ##########
 
   sound.enable = true;
-  ## hardware.pulseaudio.enable = true;
   hardware.pulseaudio = {
   enable = true;
   extraConfig = ''
     set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo
     set-default-source alsa_input.pci-0000_00_1b.0.analog-stereo
+    unload-module module-suspend-on-idle
   '';
 };
 
@@ -188,6 +181,13 @@ in
    "nvidia-x11"
    "nvidia-settings"
  ];
+
+  users.users.hammar = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" ]; # Add docker to the list of extraGroups
+    uid = 1000;
+    home = "/home/hammar";
+  };
 
  virtualisation.docker.enable = true;
  virtualisation.spiceUSBRedirection.enable = true;

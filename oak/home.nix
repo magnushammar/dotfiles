@@ -10,6 +10,7 @@ let
   systemParams = builtins.fromJSON jsonContent;
 in
 {
+    
 
   home.packages = [
     pkgs.spotify
@@ -17,10 +18,9 @@ in
     pkgs.bitwarden
     pkgs.firefox
     pkgs.google-chrome
-    pkgs-unstable.jetbrains.rider
+    #pkgs.jetbrains.rider
     pkgs.obsidian
     pkgs.github-desktop
-    #vscode-insiders This one is tricky it seems https://nixos.wiki/wiki/Visual_Studio_Code
     pkgs.libreoffice-fresh
     pkgs.jetbrains.datagrip
     pkgs.todoist-electron
@@ -36,7 +36,25 @@ in
     pkgs-unstable.masterpdfeditor
     pkgs.desktop-file-utils
     pkgs.guvcview
+    pkgs-unstable.vscode
   ];
+
+  programs.vscode = {
+    extensions = with pkgs.vscode-extensions; [
+      "ms-dotnettools.vscode-dotnet-runtime"
+      "ms-dotnettools.csharp"
+      "mkhl.direnv"
+      "GitHub.copilot-chat"
+      "GitHub.vscode-pull-request-github"
+      "npxms.hide-gitignored"
+      "Ionide.Ionide-fsharp"
+      "rangav.vscode-thunder-client"
+      "CompilouIT.xkb"
+      "sourcegraph.cody-ai"
+      "GitHub.copilot"
+      "arrterian.nix-env-selector"
+    ];
+  };
 
   home.sessionVariables = {
     # EDITOR = "emacs";
@@ -57,6 +75,10 @@ in
       alias calc=kcalc
       alias vmwin11="quickemu --vm ~/data/vms/windows-11.conf"
       alias vmwin11-reconnect='nohup remote-viewer spice://127.0.0.1:5930 > /dev/null 2>&1 &'
+
+      eval "$(direnv hook bash)"
+
+      export 
     '';
   };
 
@@ -104,4 +126,5 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  programs.direnv.enable = true;
 }
