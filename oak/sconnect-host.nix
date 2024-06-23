@@ -1,15 +1,14 @@
-{ lib, stdenv, fetchurl, autoPatchelfHook }:
+{ lib, stdenv, autoPatchelfHook, gcc-unwrapped, glibc }:
 
 stdenv.mkDerivation rec {
   pname = "sconnect-host";
-  version = "2.14.0.0";
+  version = "2.15.1.0";
 
-  src = fetchurl {
-    url = "file:///home/hammar/dotfiles/oak/sconnect-host-v${version}/sconnect_host_linux";
-    sha256 = "1v8ngz3f6v5y7drl5qgpnf5l6n7fpkrlkzczcx72nawq81i9gm4l";
-  };
+  src = ./sconnect-host-v${version}/sconnect_host_linux;
 
   nativeBuildInputs = [ autoPatchelfHook ];
+
+  buildInputs = [ gcc-unwrapped.lib glibc ];
 
   unpackPhase = "true";
 

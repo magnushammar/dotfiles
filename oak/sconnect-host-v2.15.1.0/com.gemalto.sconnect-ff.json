@@ -1,0 +1,7 @@
+{
+  "name": "com.gemalto.sconnect",
+  "description": "SConnect for Ubuntu",
+  "path": "/home/<<<user>>>/.sconnect/sconnect_host_linux",
+  "type": "stdio",
+  "allowed_extensions": [ "jid1-HfFCNbAsKx6Aow@jetpack" ]
+}

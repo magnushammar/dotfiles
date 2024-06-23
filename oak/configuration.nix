@@ -3,11 +3,13 @@ let
   customQuickemu = pkgs-unstable.quickemu.override {
     qemu = pkgs.qemu_full;
   };
+    sconnect-host = pkgs.callPackage ./sconnect-host.nix {};
 in
 {
   
   imports = [
     ./base.nix
+    ./sconnect.nix
   ];
 
   environment.systemPackages = [
@@ -27,10 +29,12 @@ in
     pkgs.v4l-utils
     pkgs.qemu-utils
     pkgs.direnv
+    sconnect-host
   ];
 
   security.pam.u2f.enable = true;
   services.pcscd.enable = true;
+  services.sconnect.enable = true;
 
   services.dbus.packages = [ 
     pkgs.cups

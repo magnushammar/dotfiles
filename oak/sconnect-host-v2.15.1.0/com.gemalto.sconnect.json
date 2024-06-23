@@ -1,0 +1,9 @@
+{
+  "name": "com.gemalto.sconnect",
+  "description": "SConnect Chrome Native Messaging Host for Ubuntu",
+  "path": "/home/<<<user>>>/.sconnect/sconnect_host_linux",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://mjhbkkaddmmnkghdnnmkjcgpphnopnfk/"
+  ]
+}
