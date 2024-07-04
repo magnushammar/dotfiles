@@ -37,6 +37,7 @@ in
     pkgs.desktop-file-utils
     pkgs.guvcview
     pkgs-unstable.vscode
+    pkgs-unstable.jetbrains.phpstorm
   ];
 
   programs.vscode = {
