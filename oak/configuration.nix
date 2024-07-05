@@ -74,7 +74,7 @@ in
     '';
   };
 
-  networking.firewall.allowedTCPPorts = [ 139 445 9003 9000 ];
+  networking.firewall.allowedTCPPorts = [ 139 445 9003 9004 ];
   networking.firewall.allowedUDPPorts = [ 137 138 ];
 
   #   ########## Network File Systems ##########
