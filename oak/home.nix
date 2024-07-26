@@ -38,6 +38,9 @@ in
     pkgs.guvcview
     pkgs-unstable.vscode
     pkgs-unstable.jetbrains.phpstorm
+    pkgs.ngrok
+    pkgs.pandoc
+    pkgs.texlive.combined.scheme-full
   ];
 
   programs.vscode = {
@@ -54,6 +57,8 @@ in
       "sourcegraph.cody-ai"
       "GitHub.copilot"
       "arrterian.nix-env-selector"
+      "ms-vscode-remote.remote-ssh"
+      "ms-vscode-remote.remote-ssh-explorer"
     ];
   };
 
