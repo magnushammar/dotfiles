@@ -1,9 +1,6 @@
 { config, pkgs, pkgs-unstable, lib, ... }:
 let
-  customQuickemu = pkgs-unstable.quickemu.override {
-    qemu = pkgs.qemu_full;
-  };
-    sconnect-host = pkgs.callPackage ./sconnect-host.nix {};
+  sconnect-host = pkgs.callPackage ./sconnect-host.nix {};
 in
 {
   
@@ -24,7 +21,8 @@ in
     pkgs.cifs-utils
     pkgs.zip
     pkgs.dropbox
-    customQuickemu
+    #customQuickemu
+    pkgs.quickemu
     pkgs.yubikey-manager
     pkgs.v4l-utils
     pkgs.qemu-utils
