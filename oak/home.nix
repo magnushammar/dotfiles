@@ -59,6 +59,10 @@ in
       "arrterian.nix-env-selector"
       "ms-vscode-remote.remote-ssh"
       "ms-vscode-remote.remote-ssh-explorer"
+      "jnoortheen.nix-ide" 
+      "ms-python.python"
+      "ms-toolsai.jupyter"
+      "ms-python.vscode-pylance"
     ];
   };
 
