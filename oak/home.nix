@@ -41,6 +41,7 @@ in
     pkgs.ngrok
     pkgs.pandoc
     pkgs.texlive.combined.scheme-full
+    pkgs.flyctl
   ];
 
   programs.vscode = {
