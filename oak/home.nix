@@ -18,15 +18,20 @@ in
     pkgs.bitwarden
     pkgs.firefox
     pkgs.google-chrome
-    #pkgs.jetbrains.rider
+    pkgs.jetbrains.rider
+    #pkgs.jetbrains.datagrip
     pkgs.obsidian
     pkgs.github-desktop
     pkgs.libreoffice-fresh
     pkgs.jetbrains.datagrip
     pkgs.todoist-electron
-    pkgs.dropbox
+    # pkgs.dropbox-cli
+    # pkgs.dropbox
+    # pkgs.qt5.qtbase
+    # pkgs.qt5.qttools
+    # pkgs.qt5.qtsvg
     pkgs.jetbrains.pycharm-professional
-    pkgs.lolcat
+    # pkgs.lolcat
     pkgs.todoist-electron
     pkgs.microsoft-edge
     pkgs.yubikey-personalization-gui
@@ -42,7 +47,16 @@ in
     pkgs.pandoc
     pkgs.texlive.combined.scheme-full
     pkgs.flyctl
+    pkgs.brave
+    pkgs.veracrypt
+    pkgs.chromium
+    pkgs.signal-desktop
+    pkgs.czkawka
+    pkgs.dupeguru
+    pkgs.jdupes
   ];
+
+  
 
   programs.vscode = {
     extensions = with pkgs.vscode-extensions; [
@@ -50,7 +64,7 @@ in
       "ms-dotnettools.csharp"
       "mkhl.direnv"
       "GitHub.copilot-chat"
-      "GitHub.vscode-pull-request-github"
+      "GitHub.vscode-pull-request-gzooithub"
       "npxms.hide-gitignored"
       "Ionide.Ionide-fsharp"
       "rangav.vscode-thunder-client"
@@ -62,15 +76,8 @@ in
       "ms-vscode-remote.remote-ssh-explorer"
       "jnoortheen.nix-ide" 
       "ms-python.python"
-      "ms-toolsai.jupyter"
-      "ms-python.vscode-pylance"
     ];
   };
-
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
-
 
   programs.bash = {
     enable = true;
@@ -89,8 +96,26 @@ in
 
       eval "$(direnv hook bash)"
 
-      export 
+     # xkbcomp ${config.home.homeDirectory}/.custom.xkb $DISPLAY
+
+     # Source environment variables from external file
+         if [ -f ~/.env_vars ]; then
+           source ~/.env_vars
+         fi
+
+      export LC_ALL=en_US.UTF-8
+
+      source ~/dotfiles/scripts/goto.sh
+
+
     '';
+  };
+
+  home.sessionPath = [ "${pkgs.jetbrains.pycharm-professional}/bin" ];
+
+  home.sessionVariables = {
+    LANG = "en_US.UTF-8";
+    LC_ALL = "en_US.UTF-8";
   };
 
   home.username = "hammar";
@@ -98,44 +123,11 @@ in
 
   xsession.numlock.enable = true;
 
-  home.stateVersion = "23.11"; # Please read update notes before changing.
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
+  home.stateVersion = "23.11"; 
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
+    
   };
 
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. If you don't want to manage your shell through Home
-  # Manager then you have to manually source 'hm-session-vars.sh' located at
-  # either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/hammar/etc/profile.d/hm-session-vars.sh
-  #
-
-  # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
   programs.direnv.enable = true;
 }

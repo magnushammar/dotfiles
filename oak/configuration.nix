@@ -16,11 +16,12 @@ in
     pkgs.kate
     pkgs.git
     pkgs.dotnet-sdk_8 # keep other versions in nix-shells
+    pkgs.dotnet-runtime_8
     pkgs.docker
     pkgs.docker-compose
     pkgs.cifs-utils
     pkgs.zip
-    pkgs.dropbox
+    pkgs.maestral
     #customQuickemu
     pkgs.quickemu
     pkgs.yubikey-manager
@@ -28,6 +29,7 @@ in
     pkgs.qemu-utils
     pkgs.direnv
     sconnect-host
+    pkgs.xorg.xmodmap
   ];
 
   security.pam.u2f.enable = true;
@@ -123,30 +125,53 @@ in
   };
 
   ########## DESKTOP ENVIRONMENT ##########
-  services.xserver = {
-    enable = true;
-    desktopManager.plasma5.enable = true;
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = false;
+services.xserver = {
+  enable = true;
+  desktopManager.plasma5.enable = true;
+  displayManager.sddm.enable = true;
+  displayManager.sddm.wayland.enable = false;
+
+  xkb = {
+    layout = "se";
+    options = "caps:none";  # Ensure Caps Lock does nothing
   };
+
+  # Custom xkb configuration
+  extraLayouts.custom = {
+    description = "Custom Swedish layout with Caps+R as Q";
+    languages = [ "swe" ];
+    symbolsFile = pkgs.writeText "custom-symbols" ''
+      partial alphanumeric_keys
+      xkb_symbols "caps_r_q" {
+        key <AC03> { [ r, R, q, Q ] };
+      };
+    '';
+  };
+};
 
 
   ########## REGIONAL & LOCALE ##########
 
-  services.xserver.xkb.options = "eurosign:e";
-  services.xserver.xkb.layout = "se";
+  # services.xserver.xkb.options = "eurosign:e,";
+  # services.xserver.xkb.layout = "se";
   time.timeZone = "Europe/Stockholm";
   services.timesyncd.enable = true;
   
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_TIME = "sv_SE.UTF-8";
-      LC_NUMERIC = "sv_SE.UTF-8";
-      LC_MONETARY = "sv_SE.UTF-8";
-      LC_MEASUREMENT = "sv_SE.UTF-8";
-    };
+ i18n = {
+  defaultLocale = "en_US.UTF-8";
+  supportedLocales = [ 
+    "en_US.UTF-8/UTF-8"
+    "sv_SE.UTF-8/UTF-8"
+  ]; 
+  extraLocaleSettings = {
+    LC_NUMERIC = "sv_SE.UTF-8";
+    LC_TIME = "sv_SE.UTF-8";
+    LC_MONETARY = "sv_SE.UTF-8";
+    LC_PAPER = "sv_SE.UTF-8";
+    LC_MEASUREMENT = "sv_SE.UTF-8";
   };
+};
+
 
   ########## OTHER HARDWARE ##########
 
