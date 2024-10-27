@@ -25,13 +25,6 @@ in
     pkgs.libreoffice-fresh
     pkgs.jetbrains.datagrip
     pkgs.todoist-electron
-    # pkgs.dropbox-cli
-    # pkgs.dropbox
-    # pkgs.qt5.qtbase
-    # pkgs.qt5.qttools
-    # pkgs.qt5.qtsvg
-    pkgs.jetbrains.pycharm-professional
-    # pkgs.lolcat
     pkgs.todoist-electron
     pkgs.microsoft-edge
     pkgs.yubikey-personalization-gui
@@ -51,9 +44,7 @@ in
     pkgs.veracrypt
     pkgs.chromium
     pkgs.signal-desktop
-    pkgs.czkawka
-    pkgs.dupeguru
-    pkgs.jdupes
+    pkgs.distrobox
   ];
 
   
@@ -111,7 +102,7 @@ in
     '';
   };
 
-  home.sessionPath = [ "${pkgs.jetbrains.pycharm-professional}/bin" ];
+  # home.sessionPath = [ "${pkgs.jetbrains.pycharm-professional}/bin" ];
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";

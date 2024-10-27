@@ -30,7 +30,11 @@ in
     pkgs.direnv
     sconnect-host
     pkgs.xorg.xmodmap
+    pkgs.podman
+    pkgs.gnumake
   ];
+
+  virtualisation.podman.enable = true;
 
   security.pam.u2f.enable = true;
   services.pcscd.enable = true;
