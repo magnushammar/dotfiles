@@ -132,27 +132,26 @@ in
 services.xserver = {
   enable = true;
   desktopManager.plasma5.enable = true;
-  displayManager.sddm.enable = true;
-  displayManager.sddm.wayland.enable = false;
-
   xkb = {
     layout = "se";
-    options = "caps:none";  # Ensure Caps Lock does nothing
-  };
-
-  # Custom xkb configuration
-  extraLayouts.custom = {
-    description = "Custom Swedish layout with Caps+R as Q";
-    languages = [ "swe" ];
-    symbolsFile = pkgs.writeText "custom-symbols" ''
-      partial alphanumeric_keys
-      xkb_symbols "caps_r_q" {
-        key <AC03> { [ r, R, q, Q ] };
-      };
-    '';
+    options = "caps:none";
+    extraLayouts.custom = {
+      description = "Custom Swedish layout with Caps+R as Q";
+      languages = [ "swe" ];
+      symbolsFile = pkgs.writeText "custom-symbols" ''
+        partial alphanumeric_keys
+        xkb_symbols "caps_r_q" {
+          key <AC03> { [ r, R, q, Q ] };
+        };
+      '';
+    };
   };
 };
 
+services.displayManager.sddm = {
+  enable = true;
+  wayland.enable = false;
+};
 
   ########## REGIONAL & LOCALE ##########
 
@@ -197,10 +196,12 @@ services.xserver = {
    hosts: files mdns_minimal [NOTFOUND=return] dns mdns
   '';
  
-  services.avahi.enable = true;
-  services.avahi.nssmdns = true;
-  services.avahi.publish.enable = true;
-  services.avahi.publish.userServices = true;
+services.avahi = {
+  enable = true;
+  nssmdns4 = true;
+  publish.enable = true;
+  publish.userServices = true;
+};
 
   networking.hosts = {
     "192.168.68.52" = ["rygel"];
