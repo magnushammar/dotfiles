@@ -17,8 +17,6 @@ in
     pkgs.git
     pkgs.dotnet-sdk_8 # keep other versions in nix-shells
     pkgs.dotnet-runtime_8
-    pkgs.docker
-    pkgs.docker-compose
     pkgs.cifs-utils
     pkgs.zip
     pkgs.maestral
@@ -32,9 +30,8 @@ in
     pkgs.xorg.xmodmap
     pkgs.podman
     pkgs.gnumake
+    pkgs.fuse-overlayfs
   ];
-
-  virtualisation.podman.enable = true;
 
   security.pam.u2f.enable = true;
   services.pcscd.enable = true;
@@ -220,13 +217,25 @@ services.avahi = {
 
   users.users.hammar = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Add docker to the list of extraGroups
+    extraGroups = [ "wheel" "docker" "fuse"  ];
     uid = 1000;
     home = "/home/hammar";
+    subUidRanges = [ { startUid = 100000; count = 65536; } ];
+    subGidRanges = [ { startGid = 100000; count = 65536; } ];
   };
 
- virtualisation.docker.enable = true;
- virtualisation.spiceUSBRedirection.enable = true;
- services.spice-vdagentd.enable = true;
+virtualisation.spiceUSBRedirection.enable = true;
+services.spice-vdagentd.enable = true;
+
+virtualisation.podman = {
+  enable = true;
+  dockerCompat = true;  # Optional: enables Docker CLI compatibility
+  defaultNetwork.settings.dns_enabled = true;
+  extraPackages = [ pkgs.fuse-overlayfs ];
+};
+    
+boot.kernelModules = [ "fuse" ];
+  
+
 
 }
